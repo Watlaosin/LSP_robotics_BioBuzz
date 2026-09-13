@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class RobotConfig {
 
-    private final Properties properties = new Properties();
+    private static final Properties properties = new Properties();
 
     public RobotConfig(Context context) {
         try (InputStream input =
@@ -23,7 +23,7 @@ public class RobotConfig {
         }
     }
 
-    public String getString(String key, String defaultValue) {
+    public static String getString(String key, String defaultValue) {
         return properties.getProperty(key, defaultValue).trim();
     }
 

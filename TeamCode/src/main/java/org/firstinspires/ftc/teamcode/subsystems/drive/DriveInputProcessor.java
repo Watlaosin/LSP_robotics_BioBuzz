@@ -4,12 +4,12 @@ import org.firstinspires.ftc.teamcode.config.RobotConfig;
 
 public class DriveInputProcessor {
 
-    private final double saturation;
-    private final double sensitivity;
-    private final double deadZone;
+    private static double saturation;
+    private static double sensitivity;
+    private static double deadZone = 0;
 
-    private final boolean invertX;
-    private final boolean invertY;
+    private static boolean invertX = false;
+    private static boolean invertY = false;
 
     public DriveInputProcessor(RobotConfig config) {
 
@@ -20,7 +20,7 @@ public class DriveInputProcessor {
 
         sensitivity = config.getDouble(
                 "Robot.Joystick_Sensitivity",
-                1.0
+                0.5
         );
 
         deadZone = config.getDouble(
@@ -30,7 +30,7 @@ public class DriveInputProcessor {
 
         invertX = config.getBoolean(
                 "Robot.Joystick_invertX",
-                false
+                true
         );
 
         invertY = config.getBoolean(
@@ -39,103 +39,51 @@ public class DriveInputProcessor {
         );
     }
 
-    public double computeX(double x, double y, double range) {
+    public static double computeX(float X, float Y, float range) {
+        double r = coerceValue(Math.sqrt((X * X) + (Y * Y)));
+        double a = Math.atan2(Y, X);
+        double value = computeModifiers(r, deadZone, saturation, sensitivity, range);
 
-        double radius = coerceValue(
-                Math.sqrt((x * x) + (y * y))
-        );
-
-        double angle = Math.atan2(y, x);
-
-        double value = computeModifiers(
-                radius,
-                range
-        );
-
-        double processedX =
-                value * Math.cos(angle);
-
-        if (invertX) {
-            processedX = -processedX;
-        }
-
-        return processedX;
+        double x = value * Math.cos(a);
+        if (invertX) x = -x;
+        return x;
     }
 
-    public double computeY(double x, double y, double range) {
+    public static double computeY(float X, float Y, float range) {
+        double r = coerceValue(Math.sqrt((X * X) + (Y * Y)));
+        double a = Math.atan2(Y, X);
+        double value = computeModifiers(r, deadZone, saturation, sensitivity, range);
 
-        double radius = coerceValue(
-                Math.sqrt((x * x) + (y * y))
-        );
-
-        double angle = Math.atan2(y, x);
-
-        double value = computeModifiers(
-                radius,
-                range
-        );
-
-        double processedY =
-                value * Math.sin(angle);
-
-        if (invertY) {
-            processedY = -processedY;
-        }
-
-        return processedY;
+        double y = value * Math.sin(a);
+        if (invertY) y = -y;
+        return y;
     }
 
-    private double computeModifiers(
-            double value,
-            double range
-    ) {
-
+    private static double computeModifiers(double value, double deadZone, double saturation, double sensitivity, double range) {
         if (deadZone > 0.0 || saturation < 1.0) {
-
-            double edgeSpace =
-                    (1.0 - saturation) + deadZone;
-
+            double edgeSpace = (1 - saturation) + deadZone;
             if (edgeSpace < 1.0) {
-
-                double multiplier =
-                        1.0 / (1.0 - edgeSpace);
-
-                value =
-                        (value - deadZone) * multiplier;
-
+                double multiplier = 1.0 / (1.0 - edgeSpace);
+                value = (value - deadZone) * multiplier;
                 value = coerceValue(value);
-
             } else {
                 value = Math.round(value);
             }
         }
 
         if (sensitivity != 0.0) {
-
-            value =
-                    value
-                            + (
-                            value
-                                    - Math.sin(
-                                    value * (Math.PI / 2.0)
-                            )
-                    )
-                            * (sensitivity * 2.0);
-
+            value = value + ((value - Math.sin(value * (Math.PI / 2))) * (sensitivity * 2));
             value = coerceValue(value);
         }
 
         if (range < 1.0) {
-            value *= range;
+            value = value * range;
         }
 
         return coerceValue(value);
     }
 
-    private double coerceValue(double value) {
-        return Math.max(
-                0.0,
-                Math.min(1.0, value)
-        );
+    private static double coerceValue(double value) {
+        return Math.max(0.0, Math.min(1.0, value));
     }
 }

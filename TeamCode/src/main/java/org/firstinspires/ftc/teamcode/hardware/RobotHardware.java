@@ -14,13 +14,13 @@ public class RobotHardware {
     public final DcMotorEx rearRightMotor;
 
     //Shooter
-    public final DcMotorEx turretShooterMotor;
+//    public final DcMotorEx turretShooterMotor;
 
-    public RobotHardware(HardwareMap hardwareMap, RobotConfig config) {
+    public RobotHardware(HardwareMap hardwareMap) {
 
         frontLeftMotor = hardwareMap.get(
                 DcMotorEx.class,
-                config.getString(
+                RobotConfig.getString(
                         "Robot.FRONT_LEFT_MOTOR_NAME",
                         "flm"
                 )
@@ -28,7 +28,7 @@ public class RobotHardware {
 
         frontRightMotor = hardwareMap.get(
                 DcMotorEx.class,
-                config.getString(
+                RobotConfig.getString(
                         "Robot.FRONT_RIGHT_MOTOR_NAME",
                         "frm"
                 )
@@ -36,7 +36,7 @@ public class RobotHardware {
 
         rearLeftMotor = hardwareMap.get(
                 DcMotorEx.class,
-                config.getString(
+                RobotConfig.getString(
                         "Robot.REAR_LEFT_MOTOR_NAME",
                         "rlm"
                 )
@@ -44,18 +44,18 @@ public class RobotHardware {
 
         rearRightMotor = hardwareMap.get(
                 DcMotorEx.class,
-                config.getString(
+                RobotConfig.getString(
                         "Robot.REAR_RIGHT_MOTOR_NAME",
                         "rrm"
                 )
         );
 
-        turretShooterMotor = hardwareMap.get(
-                DcMotorEx.class,
-                config.getString(
-                        "Robot.TURRET_SHOOTER_MOTOR_NAME",
-                        "tsm"
-                )
-        );
+//        turretShooterMotor = hardwareMap.get(
+//                DcMotorEx.class,
+//                config.getString(
+//                        "Robot.TURRET_SHOOTER_MOTOR_NAME",
+//                        "tsm"
+//                )
+//        );
     }
 }
