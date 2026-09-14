@@ -10,6 +10,7 @@ public class RobotConfig {
     private final Properties properties = new Properties();
 
     public RobotConfig(Context context) {
+
         try (InputStream input =
                      context.getAssets().open("Robot.config")) {
 
@@ -24,10 +25,13 @@ public class RobotConfig {
     }
 
     public String getString(String key, String defaultValue) {
-        return properties.getProperty(key, defaultValue).trim();
+        return properties
+                .getProperty(key, defaultValue)
+                .trim();
     }
 
     public double getDouble(String key, double defaultValue) {
+
         String value = properties.getProperty(key);
 
         if (value == null) {
@@ -36,12 +40,14 @@ public class RobotConfig {
 
         try {
             return Double.parseDouble(value.trim());
+
         } catch (NumberFormatException e) {
             return defaultValue;
         }
     }
 
     public boolean getBoolean(String key, boolean defaultValue) {
+
         String value = properties.getProperty(key);
 
         if (value == null) {

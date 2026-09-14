@@ -7,16 +7,17 @@ import org.firstinspires.ftc.teamcode.config.RobotConfig;
 
 public class RobotHardware {
 
-    //DriveTrain
     public final DcMotorEx frontLeftMotor;
     public final DcMotorEx frontRightMotor;
     public final DcMotorEx rearLeftMotor;
     public final DcMotorEx rearRightMotor;
 
-    //Shooter
     public final DcMotorEx turretShooterMotor;
 
-    public RobotHardware(HardwareMap hardwareMap, RobotConfig config) {
+    public RobotHardware(
+            HardwareMap hardwareMap,
+            RobotConfig config
+    ) {
 
         frontLeftMotor = hardwareMap.get(
                 DcMotorEx.class,
@@ -50,6 +51,7 @@ public class RobotHardware {
                 )
         );
 
+
         turretShooterMotor = hardwareMap.get(
                 DcMotorEx.class,
                 config.getString(
@@ -57,5 +59,6 @@ public class RobotHardware {
                         "tsm"
                 )
         );
+
     }
 }

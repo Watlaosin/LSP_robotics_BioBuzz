@@ -20,7 +20,7 @@ public class DriveInputProcessor {
 
         sensitivity = config.getDouble(
                 "Robot.Joystick_Sensitivity",
-                1.0
+                0.5
         );
 
         deadZone = config.getDouble(
@@ -30,7 +30,7 @@ public class DriveInputProcessor {
 
         invertX = config.getBoolean(
                 "Robot.Joystick_invertX",
-                false
+                true
         );
 
         invertY = config.getBoolean(
@@ -41,52 +41,59 @@ public class DriveInputProcessor {
 
     public double computeX(double x, double y, double range) {
 
-        double radius = coerceValue(
+        double r = coerceValue(
                 Math.sqrt((x * x) + (y * y))
         );
 
-        double angle = Math.atan2(y, x);
+        double a = Math.atan2(y, x);
 
         double value = computeModifiers(
-                radius,
+                r,
+                deadZone,
+                saturation,
+                sensitivity,
                 range
         );
 
-        double processedX =
-                value * Math.cos(angle);
+        double result = value * Math.cos(a);
 
         if (invertX) {
-            processedX = -processedX;
+            result = -result;
         }
 
-        return processedX;
+        return result;
     }
 
     public double computeY(double x, double y, double range) {
 
-        double radius = coerceValue(
+        double r = coerceValue(
                 Math.sqrt((x * x) + (y * y))
         );
 
-        double angle = Math.atan2(y, x);
+        double a = Math.atan2(y, x);
 
         double value = computeModifiers(
-                radius,
+                r,
+                deadZone,
+                saturation,
+                sensitivity,
                 range
         );
 
-        double processedY =
-                value * Math.sin(angle);
+        double result = value * Math.sin(a);
 
         if (invertY) {
-            processedY = -processedY;
+            result = -result;
         }
 
-        return processedY;
+        return result;
     }
 
     private double computeModifiers(
             double value,
+            double deadZone,
+            double saturation,
+            double sensitivity,
             double range
     ) {
 
