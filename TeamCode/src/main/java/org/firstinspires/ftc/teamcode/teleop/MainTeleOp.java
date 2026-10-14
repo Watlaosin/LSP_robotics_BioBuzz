@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.config.RobotConfig;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveInputProcessor;
 import org.firstinspires.ftc.teamcode.subsystems.drive.MecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.feeder.Feeder;
 import org.firstinspires.ftc.teamcode.subsystems.shooter.Shooter;
 
 @TeleOp(
@@ -19,6 +20,7 @@ public class MainTeleOp extends OpMode {
     private MecanumDrive drive;
 
     private Shooter shooter;
+    private Feeder feeder;
 
     @Override
     public void init() {
@@ -44,6 +46,7 @@ public class MainTeleOp extends OpMode {
                 );
 
         shooter = new Shooter(robot);
+        feeder = new Feeder(robot);
 
         telemetry.addData(
                 "Status",
@@ -59,12 +62,26 @@ public class MainTeleOp extends OpMode {
         drive.drive(gamepad1);
 
         if (gamepad1.a) {
-            shooter.setPower(1.0);
-        } else {
+            shooter.setRPM(4000);
+            feeder.setRPM_Both(312);
+        }
+        else if (gamepad1.b){
+            feeder.setRPM_Bottom(312);
+            }
+        else if (gamepad1.y){
+            feeder.setRPM_Top(312);
+        }
+        else if (gamepad1.x){
+            shooter.setRPM(6000);
+        }
+         else {
             shooter.stop();
+            feeder.stop();
         }
 
-        telemetry.addLine("Drive running this shit workkkkkkkssssss");
+        telemetry.addData("Shooter RPM","%.0f",shooter.getRPM()
+
+        );
 
         telemetry.update();
     }

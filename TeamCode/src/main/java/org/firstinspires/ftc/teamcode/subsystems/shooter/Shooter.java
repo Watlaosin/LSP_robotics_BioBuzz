@@ -9,10 +9,11 @@ import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 public class Shooter {
 
+    private static final double TICKS_PER_REV = 28.0;
+
     private final DcMotorEx shooterMotor;
 
     public Shooter(RobotHardware hardware) {
-
         shooterMotor = hardware.turretShooterMotor;
 
         shooterMotor.setDirection(
@@ -21,21 +22,22 @@ public class Shooter {
 
         shooterMotor.setZeroPowerBehavior(
                 DcMotor.ZeroPowerBehavior.FLOAT
+
         );
 
         shooterMotor.setMode(
-                DcMotor.RunMode.RUN_WITHOUT_ENCODER
+                DcMotor.RunMode.RUN_USING_ENCODER
         );
     }
 
-    //this is set power3333
-    /* ttt
-    tttt
-    */
-    public void setPower(double power) {
-        shooterMotor.setPower(
-                Range.clip(power, -1.0, 1.0)
-        );
+    public void setRPM(double rpm) {
+        double ticksPerSecond = rpm*TICKS_PER_REV/60;
+        shooterMotor.setVelocity(ticksPerSecond);
+    }
+
+    public double getRPM() {
+        double tickPerSecond = shooterMotor.getVelocity();
+        return Math.abs(tickPerSecond*60/TICKS_PER_REV);
     }
 
     public void stop() {
