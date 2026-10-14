@@ -28,6 +28,10 @@ public class Shooter {
         );
     }
 
+    //this is set power
+    /* ttt
+    tttt
+    */
     public void setPower(double power) {
         shooterMotor.setPower(
                 Range.clip(power, -1.0, 1.0)
