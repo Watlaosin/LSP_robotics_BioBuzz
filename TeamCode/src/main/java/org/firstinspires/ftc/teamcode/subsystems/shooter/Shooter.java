@@ -28,7 +28,7 @@ public class Shooter {
         );
     }
 
-    //this is set power
+    //this is set power3333
     /* ttt
     tttt
     */
