@@ -40,6 +40,10 @@ public class Shooter {
         return Math.abs(tickPerSecond*60/TICKS_PER_REV);
     }
 
+    public void max_speed(){
+        shooterMotor.setPower(1);
+    }
+
     public void stop() {
         shooterMotor.setPower(0.0);
     }

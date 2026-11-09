@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -63,6 +64,8 @@ public class RobotHardware {
                         "tsm"
                 )
         );
+
+        turretShooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         FeederMotorTop = hardwareMap.get(DcMotorEx.class,config.getString("robot.FEEDER_MOTOR_TOP_NAME","fmt"));
 
