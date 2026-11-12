@@ -71,11 +71,11 @@ public class MainTeleOp extends OpMode {
         else if (gamepad1.y){
             feeder.setRPM_Top(312);
         }
-        else if (gamepad1.x){
-            shooter.setRPM(6000);
-        }
-        else if (gamepad1.right_trigger > 0.5){
+        else if (gamepad1.right_trigger > 0.5 && gamepad1.x){
             shooter.max_speed();
+        }
+        else if (gamepad1.x && gamepad1.right_trigger <= 0.5){
+            shooter.half_speed();
         }
          else {
             shooter.stop();

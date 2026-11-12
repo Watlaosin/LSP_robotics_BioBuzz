@@ -44,6 +44,10 @@ public class Shooter {
         shooterMotor.setPower(1);
     }
 
+    public void half_speed(){
+        shooterMotor.setPower(0.5);
+    }
+
     public void stop() {
         shooterMotor.setPower(0.0);
     }

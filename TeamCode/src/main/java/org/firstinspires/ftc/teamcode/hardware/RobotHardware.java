@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
 import org.firstinspires.ftc.teamcode.config.RobotConfig;
 
@@ -18,6 +19,7 @@ public class RobotHardware {
     public final DcMotorEx FeederMotorTop;
 
     public final DcMotorEx FeederMotorBottom;
+    public final NormalizedColorSensor color_sensor;
 
     public RobotHardware(
             HardwareMap hardwareMap,
@@ -65,11 +67,13 @@ public class RobotHardware {
                 )
         );
 
+        color_sensor = hardwareMap.get(NormalizedColorSensor.class, "color_sensor");
+
         turretShooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        FeederMotorTop = hardwareMap.get(DcMotorEx.class,config.getString("robot.FEEDER_MOTOR_TOP_NAME","fmt"));
+        FeederMotorTop = hardwareMap.get(DcMotorEx.class, config.getString("robot.FEEDER_MOTOR_TOP_NAME", "fmt"));
 
-        FeederMotorBottom = hardwareMap.get(DcMotorEx.class,config.getString("robot.FEEDER_MOTOR_BOTTOM_NAME","fmb"));
+        FeederMotorBottom = hardwareMap.get(DcMotorEx.class, config.getString("robot.FEEDER_MOTOR_BOTTOM_NAME", "fmb"));
 
     }
 }
