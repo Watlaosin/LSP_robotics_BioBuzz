@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.subsystems.shooter;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
@@ -30,14 +29,14 @@ public class Shooter {
         );
     }
 
-    public void setRPM(double rpm) {
-        double ticksPerSecond = rpm*TICKS_PER_REV/60;
-        shooterMotor.setVelocity(ticksPerSecond);
-    }
-
     public double getRPM() {
         double tickPerSecond = shooterMotor.getVelocity();
-        return Math.abs(tickPerSecond*60/TICKS_PER_REV);
+        return Math.abs(tickPerSecond * 60 / TICKS_PER_REV);
+    }
+
+    public void setRPM(double rpm) {
+        double ticksPerSecond = rpm * TICKS_PER_REV / 60;
+        shooterMotor.setVelocity(ticksPerSecond);
     }
 
     public void stop() {

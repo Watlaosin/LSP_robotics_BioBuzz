@@ -64,9 +64,9 @@ public class RobotHardware {
                 )
         );
 
-        FeederMotorTop = hardwareMap.get(DcMotorEx.class,config.getString("robot.FEEDER_MOTOR_TOP_NAME","fmt"));
+        FeederMotorTop = hardwareMap.get(DcMotorEx.class, config.getString("robot.FEEDER_MOTOR_TOP_NAME", "fmt"));
 
-        FeederMotorBottom = hardwareMap.get(DcMotorEx.class,config.getString("robot.FEEDER_MOTOR_BOTTOM_NAME","fmb"));
+        FeederMotorBottom = hardwareMap.get(DcMotorEx.class, config.getString("robot.FEEDER_MOTOR_BOTTOM_NAME", "fmb"));
 
     }
 }
