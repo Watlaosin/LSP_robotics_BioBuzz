@@ -12,12 +12,6 @@ public class RobotHardware {
     public final DcMotorEx rearLeftMotor;
     public final DcMotorEx rearRightMotor;
 
-    public final DcMotorEx turretShooterMotor;
-
-    public final DcMotorEx FeederMotorTop;
-
-    public final DcMotorEx FeederMotorBottom;
-
     public RobotHardware(
             HardwareMap hardwareMap,
             RobotConfig config
@@ -55,18 +49,6 @@ public class RobotHardware {
                 )
         );
 
-
-        turretShooterMotor = hardwareMap.get(
-                DcMotorEx.class,
-                config.getString(
-                        "Robot.TURRET_SHOOTER_MOTOR_NAME",
-                        "tsm"
-                )
-        );
-
-        FeederMotorTop = hardwareMap.get(DcMotorEx.class, config.getString("robot.FEEDER_MOTOR_TOP_NAME", "fmt"));
-
-        FeederMotorBottom = hardwareMap.get(DcMotorEx.class, config.getString("robot.FEEDER_MOTOR_BOTTOM_NAME", "fmb"));
 
     }
 }
