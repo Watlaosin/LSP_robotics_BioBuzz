@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveInputProcessor;
 import org.firstinspires.ftc.teamcode.subsystems.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.feeder.Feeder;
+import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.shooter.Shooter;
 
 @TeleOp(
@@ -21,6 +22,8 @@ public class MainTeleOp extends OpMode {
 
     private Shooter shooter;
     private Feeder feeder;
+
+    private Intake intake;
 
     @Override
     public void init() {
@@ -47,6 +50,7 @@ public class MainTeleOp extends OpMode {
 
         shooter = new Shooter(robot);
         feeder = new Feeder(robot);
+        intake = new Intake(robot);
 
         telemetry.addData(
                 "Status",
@@ -73,6 +77,9 @@ public class MainTeleOp extends OpMode {
         }
         else if (gamepad1.x){
             shooter.setRPM(6000);
+        }
+        else if (gamepad1.left_bumper){
+            intake.setPower(1);
         }
          else {
             shooter.stop();
