@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -17,6 +18,8 @@ public class RobotHardware {
     public final DcMotorEx FeederMotorTop;
 
     public final DcMotorEx FeederMotorBottom;
+
+    public final CRServo IntakeServo;
 
     public RobotHardware(
             HardwareMap hardwareMap,
@@ -64,9 +67,28 @@ public class RobotHardware {
                 )
         );
 
-        FeederMotorTop = hardwareMap.get(DcMotorEx.class, config.getString("robot.FEEDER_MOTOR_TOP_NAME", "fmt"));
+        FeederMotorTop = hardwareMap.get(
+                DcMotorEx.class,
+                config.getString("robot.FEEDER_MOTOR_TOP_NAME",
+                        "fmt"
+                )
+        );
 
-        FeederMotorBottom = hardwareMap.get(DcMotorEx.class, config.getString("robot.FEEDER_MOTOR_BOTTOM_NAME", "fmb"));
+        FeederMotorBottom = hardwareMap.get(
+                DcMotorEx.class,
+                config.getString("robot.FEEDER_MOTOR_BOTTOM_NAME",
+                        "fmb"
+                )
+        );
+
+        IntakeServo = hardwareMap.get(
+                CRServo.class,
+                config.getString("robot.INTAKE_SERVO_NAME",
+                        "ism"
+                )
+        );
+
+
 
     }
 }

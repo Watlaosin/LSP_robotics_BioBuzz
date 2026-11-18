@@ -10,36 +10,36 @@ public class Shooter {
 
     private static final double TICKS_PER_REV = 28.0;
 
-    private final DcMotorEx shooterMotor;
+    private final DcMotorEx turretShooterMotor;
 
     public Shooter(RobotHardware hardware) {
-        shooterMotor = hardware.turretShooterMotor;
+        turretShooterMotor = hardware.turretShooterMotor;
 
-        shooterMotor.setDirection(
+        turretShooterMotor.setDirection(
                 DcMotorSimple.Direction.FORWARD
         );
 
-        shooterMotor.setZeroPowerBehavior(
+        turretShooterMotor.setZeroPowerBehavior(
                 DcMotor.ZeroPowerBehavior.FLOAT
 
         );
 
-        shooterMotor.setMode(
+        turretShooterMotor.setMode(
                 DcMotor.RunMode.RUN_USING_ENCODER
         );
     }
 
-    public double getRPM() {
-        double tickPerSecond = shooterMotor.getVelocity();
-        return Math.abs(tickPerSecond * 60 / TICKS_PER_REV);
+    public void setRPM(double rpm) {
+        double ticksPerSecond = rpm*TICKS_PER_REV/60;
+        turretShooterMotor.setVelocity(ticksPerSecond);
     }
 
-    public void setRPM(double rpm) {
-        double ticksPerSecond = rpm * TICKS_PER_REV / 60;
-        shooterMotor.setVelocity(ticksPerSecond);
+    public double getRPM() {
+        double tickPerSecond = turretShooterMotor.getVelocity();
+        return Math.abs(tickPerSecond*60/TICKS_PER_REV);
     }
 
     public void stop() {
-        shooterMotor.setPower(0.0);
+        turretShooterMotor.setPower(0.0);
     }
 }
