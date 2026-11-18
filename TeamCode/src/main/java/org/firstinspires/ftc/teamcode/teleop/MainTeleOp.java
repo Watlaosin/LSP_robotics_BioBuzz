@@ -68,14 +68,11 @@ public class MainTeleOp extends OpMode {
         if (gamepad1.a) {
             shooter.setRPM(4000);
             feeder.setRPM_Both(312);
-        }
-        else if (gamepad1.b){
+        } else if (gamepad1.b) {
             feeder.setRPM_Bottom(312);
-            }
-        else if (gamepad1.y){
+        } else if (gamepad1.y) {
             feeder.setRPM_Top(312);
-        }
-        else if (gamepad1.x){
+        } else if (gamepad1.x) {
             shooter.setRPM(6000);
         }
         else if (gamepad1.left_bumper){
@@ -86,7 +83,7 @@ public class MainTeleOp extends OpMode {
             feeder.stop();
         }
 
-        telemetry.addData("Shooter RPM","%.0f",shooter.getRPM()
+        telemetry.addData("Shooter RPM", "%.0f", shooter.getRPM()
 
         );
 
