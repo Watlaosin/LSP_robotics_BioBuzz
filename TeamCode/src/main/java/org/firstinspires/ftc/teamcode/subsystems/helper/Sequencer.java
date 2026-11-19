@@ -21,8 +21,6 @@ public class Sequencer implements Runnable {
     SequenceAction currentAction = null;
     public int actionCounter = 0;
 
-
-
     /**
      * Adds a Delay Action to Queue
      * <p>A Non-blocking wait within the Sequencer</p>
