@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.drive.DriveInputProcessor;
 import org.firstinspires.ftc.teamcode.subsystems.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.feeder.Feeder;
 import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.shooter.Angle_adjuster;
 import org.firstinspires.ftc.teamcode.subsystems.shooter.Shooter;
 
 @TeleOp(
@@ -24,6 +25,7 @@ public class MainTeleOp extends OpMode {
     private Feeder feeder;
 
     private Intake intake;
+    private Angle_adjuster angle_adjuster;
 
     @Override
     public void init() {
@@ -51,6 +53,7 @@ public class MainTeleOp extends OpMode {
         shooter = new Shooter(robot);
         feeder = new Feeder(robot);
         intake = new Intake(robot);
+        angle_adjuster = new Angle_adjuster(robot);
 
         telemetry.addData(
                 "Status",
@@ -66,26 +69,27 @@ public class MainTeleOp extends OpMode {
         drive.drive(gamepad1);
 
         if (gamepad1.a) {
-            shooter.setRPM(4000);
-            feeder.setRPM_Both(312);
-        } else if (gamepad1.b) {
-            feeder.setRPM_Bottom(312);
-        } else if (gamepad1.y) {
-            feeder.setRPM_Top(312);
-        } else if (gamepad1.x) {
-            shooter.setRPM(6000);
+            intake.intake();
         }
-        else if (gamepad1.left_bumper){
-            intake.setPower(1);
+        else {
+            intake.stop();
         }
-         else {
-            shooter.stop();
-            feeder.stop();
+        if (gamepad1.b){
+            intake.setPower(1.0);
+            }
+        else {
+            intake.stop();
+        }
+        if (gamepad1.y){
+            angle_adjuster.setRawPosition(0.2);
+        }
+        if (gamepad1.x){
+            angle_adjuster.setRawPosition(0.7);
         }
 
-        telemetry.addData("Shooter RPM", "%.0f", shooter.getRPM()
+        telemetry.addData("Shooter RPM","%.0f",shooter.getRPM());
 
-        );
+        telemetry.addData("Servo Position : ","%.2f",angle_adjuster.getposition());
 
         telemetry.update();
     }

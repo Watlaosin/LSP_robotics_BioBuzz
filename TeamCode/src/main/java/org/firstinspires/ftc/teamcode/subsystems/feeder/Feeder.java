@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems.feeder;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
@@ -12,7 +13,7 @@ public class Feeder {
 
     private final DcMotorEx FeederMotorTop;
 
-    private final DcMotorEx FeederMotorBottom;
+    private  final DcMotorEx FeederMotorBottom;
 
     public Feeder(RobotHardware hardware) {
 
@@ -45,24 +46,24 @@ public class Feeder {
     }
 
     public void setRPM_Top(double rpm) {
-        double ticksPerSecond = rpm * TICKS_PER_REV / 60;
+        double ticksPerSecond = rpm*TICKS_PER_REV/60;
         FeederMotorTop.setVelocity(ticksPerSecond);
     }
 
     public void setRPM_Bottom(double rpm) {
-        double ticksPerSecond = rpm * TICKS_PER_REV / 60;
+        double ticksPerSecond = rpm*TICKS_PER_REV/60;
         FeederMotorBottom.setVelocity(ticksPerSecond);
     }
 
-    public void setRPM_Both(double rpm) {
-        double ticksPerSecond = rpm * TICKS_PER_REV / 60;
+    public void setRPM_Both(double rpm){
+        double ticksPerSecond = rpm*TICKS_PER_REV/60;
         FeederMotorTop.setVelocity(ticksPerSecond);
         FeederMotorBottom.setVelocity(ticksPerSecond);
     }
 
     public double getRPM() {
         double tickPerSecond = FeederMotorTop.getVelocity();
-        return Math.abs(tickPerSecond * 60 / TICKS_PER_REV);
+        return Math.abs(tickPerSecond*60/TICKS_PER_REV);
     }
 
     public void stop() {

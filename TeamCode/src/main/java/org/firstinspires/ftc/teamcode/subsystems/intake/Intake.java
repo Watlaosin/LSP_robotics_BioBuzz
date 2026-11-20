@@ -17,11 +17,11 @@ public class Intake {
         IntakeServo.setPower(Range.clip(power, -1.0, 1.0));
     }
 
-    public void intake(double power){
+    public void intake(){
         setPower(1.0);
     }
 
-    public void stop(double power){
+    public void stop(){
         setPower(0.0);
     }
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems.shooter;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
@@ -16,7 +17,7 @@ public class Shooter {
         turretShooterMotor = hardware.turretShooterMotor;
 
         turretShooterMotor.setDirection(
-                DcMotorSimple.Direction.FORWARD
+                DcMotorSimple.Direction.REVERSE
         );
 
         turretShooterMotor.setZeroPowerBehavior(
