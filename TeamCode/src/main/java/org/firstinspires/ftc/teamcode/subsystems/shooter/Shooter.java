@@ -17,7 +17,7 @@ public class Shooter {
         turretShooterMotor = hardware.turretShooterMotor;
 
         turretShooterMotor.setDirection(
-                DcMotorSimple.Direction.FORWARD
+                DcMotorSimple.Direction.REVERSE
         );
 
         turretShooterMotor.setZeroPowerBehavior(

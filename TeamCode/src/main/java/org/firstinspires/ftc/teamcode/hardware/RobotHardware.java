@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -20,6 +21,8 @@ public class RobotHardware {
     public final DcMotorEx FeederMotorBottom;
 
     public final CRServo IntakeServo;
+
+    public final Servo AngleAdjuster;
 
     public RobotHardware(
             HardwareMap hardwareMap,
@@ -86,6 +89,12 @@ public class RobotHardware {
                 config.getString("robot.INTAKE_SERVO_NAME",
                         "ism"
                 )
+        );
+
+        AngleAdjuster = hardwareMap.get(
+                Servo.class,
+                config.getString("robot.ANGLE_SHOOTER_ADJUSTER_NAME",
+                        "asa")
         );
 
 
