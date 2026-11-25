@@ -50,6 +50,7 @@ public class ObjectVisionProcessor implements VisionProcessor {
     private double cameraCenterX;
     private double cameraCenterY;
 
+    // dataclass
     public static class Detection {
         public final double centerX;
         public final double centerY;
@@ -84,9 +85,6 @@ public class ObjectVisionProcessor implements VisionProcessor {
     private volatile List<Detection> lastDetection = Collections.emptyList();
     private volatile boolean released = false;
 
-
-    private double filteredDistance = -1;
-
     private final Paint circlePaint = new Paint();
     private final Paint textPaint = new Paint();
 
@@ -108,10 +106,12 @@ public class ObjectVisionProcessor implements VisionProcessor {
     }
 
     private final Mat hsv = new Mat();
+
     private final Mat mask = new Mat();
 
-
     private final Mat hierarchy = new Mat();
+
+    private final Mat tmp = new Mat();
 
     private final Mat kernel_open = Imgproc.getStructuringElement(
             Imgproc.MORPH_ELLIPSE,
@@ -127,20 +127,29 @@ public class ObjectVisionProcessor implements VisionProcessor {
     public synchronized List<Detection> processFrame(Mat frame, long captureTimeNanos) {
         if (released) return null;
 
-        // Convert RGB to HSV
+        // to hsv
         Imgproc.cvtColor(
                 frame,
                 hsv,
                 Imgproc.COLOR_RGB2HSV
         );
 
-        // Isolate yellow pixels
         Core.inRange(
                 hsv,
                 lowerYellow,
                 upperYellow,
                 mask
         );
+
+        Core.inRange(
+                hsv,
+                lowerRed,
+                upperRed,
+                tmp
+        );
+
+        // merge masks
+        Core.add(mask, tmp, mask);
 
         // Remove small noise
         Imgproc.morphologyEx(
@@ -213,7 +222,6 @@ public class ObjectVisionProcessor implements VisionProcessor {
                 );
 
                 if (radius[0] > 0) {
-
                     // Estimate distance
                     double distance =
                             fx * pollenDiameter_mm
@@ -314,5 +322,23 @@ public class ObjectVisionProcessor implements VisionProcessor {
         }
     }
 
+    public List<Detection> getLastDetection() {
+        return lastDetection;
+    }
 
+    public int getDetectionCount() {
+        return lastDetection.size();
+    }
+
+    public synchronized void release() {
+        released = true;
+
+        lastDetection = Collections.emptyList();
+
+        hsv.release();
+        mask.release();
+        hierarchy.release();
+        kernel_open.release();
+        kernel_close.release();
+    }
 }
