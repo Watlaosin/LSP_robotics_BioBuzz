@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.subsystems.drive.DriveInputProcessor;
 import org.firstinspires.ftc.teamcode.subsystems.drive.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.shooter.Shooter;
+import org.firstinspires.ftc.teamcode.subsystems.ball_color_detector.BallColorDetector;
 
 @TeleOp(
         name = "TeleOp",
@@ -19,6 +20,7 @@ public class MainTeleOp extends OpMode {
     private MecanumDrive drive;
 
     private Shooter shooter;
+    private BallColorDetector ballColorDetector;
 
     @Override
     public void init() {
@@ -44,6 +46,7 @@ public class MainTeleOp extends OpMode {
                 );
 
         shooter = new Shooter(robot);
+        ballColorDetector = new BallColorDetector(robot, telemetry);
 
         telemetry.addData(
                 "Status",
@@ -63,6 +66,7 @@ public class MainTeleOp extends OpMode {
         } else {
             shooter.stop();
         }
+        ballColorDetector.getDetectedColor(robot, telemetry);
 
         telemetry.addLine("Drive running this shit workkkkkkkssssss");
 

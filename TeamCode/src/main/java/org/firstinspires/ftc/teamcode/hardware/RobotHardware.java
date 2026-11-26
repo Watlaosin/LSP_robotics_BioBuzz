@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
 
 import org.firstinspires.ftc.teamcode.config.RobotConfig;
 
@@ -13,6 +16,7 @@ public class RobotHardware {
     public final DcMotorEx rearRightMotor;
 
     public final DcMotorEx turretShooterMotor;
+    public final NormalizedColorSensor colorSensor;
 
     public RobotHardware(
             HardwareMap hardwareMap,
@@ -51,14 +55,20 @@ public class RobotHardware {
                 )
         );
 
-
         turretShooterMotor = hardwareMap.get(
                 DcMotorEx.class,
                 config.getString(
                         "Robot.TURRET_SHOOTER_MOTOR_NAME",
-                        "tsm"
+                         "tsm"
                 )
         );
 
+        colorSensor = hardwareMap.get(
+                NormalizedColorSensor.class,
+                config.getString("Robot.BALL_COLOR_DETECTOR",
+                        "bcd"
+                )
+        );
     }
+
 }
