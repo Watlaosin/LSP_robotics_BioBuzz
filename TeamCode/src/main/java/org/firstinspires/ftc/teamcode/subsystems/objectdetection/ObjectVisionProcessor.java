@@ -63,6 +63,12 @@ public class ObjectVisionProcessor implements VisionProcessor {
 
         public final double circularity;
 
+        public enum ObjectType {
+            Pollen, Flower
+        }
+
+        public ObjectType objectType;
+
         public Detection(
                 double centerX,
                 double centerY,
@@ -70,7 +76,8 @@ public class ObjectVisionProcessor implements VisionProcessor {
                 double distanceMM,
                 double angleDegrees,
                 double lateralOffsetMM,
-                double circularity
+                double circularity,
+                ObjectType objectType
         ) {
             this.centerX = centerX;
             this.centerY = centerY;
@@ -79,6 +86,7 @@ public class ObjectVisionProcessor implements VisionProcessor {
             this.angleDegrees = angleDegrees;
             this.lateralOffsetMM = lateralOffsetMM;
             this.circularity = circularity;
+            this.objectType = objectType;
         }
     }
 
@@ -107,11 +115,11 @@ public class ObjectVisionProcessor implements VisionProcessor {
 
     private final Mat hsv = new Mat();
 
-    private final Mat mask = new Mat();
+    private final Mat mask1 = new Mat();
+
+    private final Mat mask2 = new Mat();
 
     private final Mat hierarchy = new Mat();
-
-    private final Mat tmp = new Mat();
 
     private final Mat kernel_open = Imgproc.getStructuringElement(
             Imgproc.MORPH_ELLIPSE,
@@ -138,42 +146,63 @@ public class ObjectVisionProcessor implements VisionProcessor {
                 hsv,
                 lowerYellow,
                 upperYellow,
-                mask
+                mask1
         );
-
-        Core.inRange(
-                hsv,
-                lowerRed,
-                upperRed,
-                tmp
-        );
-
-        // merge masks
-        Core.add(mask, tmp, mask);
 
         // Remove small noise
         Imgproc.morphologyEx(
-                mask,
-                mask,
+                mask1,
+                mask1,
                 Imgproc.MORPH_OPEN,
                 kernel_open
         );
 
         // Fill small gaps
         Imgproc.morphologyEx(
-                mask,
-                mask,
+                mask1,
+                mask1,
+                Imgproc.MORPH_CLOSE,
+                kernel_close
+        );
+
+        Core.inRange(
+                hsv,
+                lowerRed,
+                upperRed,
+                mask2
+        );
+
+        Imgproc.morphologyEx(
+                mask2,
+                mask2,
+                Imgproc.MORPH_OPEN,
+                kernel_open
+        );
+
+        Imgproc.morphologyEx(
+                mask2,
+                mask2,
                 Imgproc.MORPH_CLOSE,
                 kernel_close
         );
 
 
         // Find contours
-        List<MatOfPoint> contours = new ArrayList<>();
+        List<MatOfPoint> contours1 = new ArrayList<>();
 
         Imgproc.findContours(
-                mask,
-                contours,
+                mask1,
+                contours1,
+                hierarchy,
+                Imgproc.RETR_EXTERNAL,
+                Imgproc.CHAIN_APPROX_SIMPLE
+        );
+
+        List<MatOfPoint> contours2 = new ArrayList<>();
+
+        Imgproc.findContours(
+                mask2,
+                contours2,
                 hierarchy,
                 Imgproc.RETR_EXTERNAL,
                 Imgproc.CHAIN_APPROX_SIMPLE
@@ -181,7 +210,7 @@ public class ObjectVisionProcessor implements VisionProcessor {
 
         List<Detection> detections = new ArrayList<>();
 
-        for (MatOfPoint contour : contours) {
+        for (MatOfPoint contour : contours1) {
             double area = Imgproc.contourArea(contour);
 
             if (area < minArea) {
@@ -250,7 +279,88 @@ public class ObjectVisionProcessor implements VisionProcessor {
                                     distance,
                                     angle,
                                     lateral,
-                                    circularity
+                                    circularity,
+                                    Detection.ObjectType.Pollen
+                            )
+                    );
+                }
+            }
+
+            contour2f.release();
+            contour.release();
+        }
+
+        for (MatOfPoint contour : contours2) {
+            double area = Imgproc.contourArea(contour);
+
+            if (area < minArea) {
+                contour.release();
+                continue;
+            }
+
+            MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
+
+            double perimeter = Imgproc.arcLength(contour2f, true);
+            double circularity = 0;
+
+            if (perimeter > 0) {
+                circularity =
+                        (4.0 * Math.PI * area)
+                                / (perimeter * perimeter);
+            }
+
+            org.opencv.core.Rect box = Imgproc.boundingRect(contour);
+            double aspectRatio =
+                    (double) box.width
+                            / Math.max(1, box.height);
+
+            boolean valid =
+                    circularity >= minCircularity
+                            && aspectRatio >= minAspRatio
+                            && aspectRatio <= maxAspRatio;
+
+
+            if (valid) {
+                Point center = new Point();
+                float[] radius = new float[1];
+
+                Imgproc.minEnclosingCircle(
+                        contour2f,
+                        center,
+                        radius
+                );
+
+                if (radius[0] > 0) {
+                    // Estimate distance
+                    double distance =
+                            fx * pollenDiameter_mm
+                                    / (2.0 * radius[0]);
+
+                    // Estimate angle
+                    double angle =
+                            Math.toDegrees(
+                                    Math.atan(
+                                            (center.x - cameraCenterX)
+                                                    / fx
+                                    )
+                            );
+
+                    // Estimate horizontal offset
+                    double lateral =
+                            distance * Math.tan(
+                                    Math.toRadians(angle)
+                            );
+
+                    detections.add(
+                            new Detection(
+                                    center.x,
+                                    center.y,
+                                    radius[0],
+                                    distance,
+                                    angle,
+                                    lateral,
+                                    circularity,
+                                    Detection.ObjectType.Flower
                             )
                     );
                 }
@@ -293,11 +403,11 @@ public class ObjectVisionProcessor implements VisionProcessor {
                 continue;
             }
 
-            Detection ball = (Detection) object;
+            Detection obj = (Detection) object;
 
-            float x = (float) ball.centerX * scaleBmpPxToCanvasPx;
-            float y = (float) ball.centerY * scaleBmpPxToCanvasPx;
-            float radius = (float) ball.radius * scaleBmpPxToCanvasPx;
+            float x = (float) obj.centerX * scaleBmpPxToCanvasPx;
+            float y = (float) obj.centerY * scaleBmpPxToCanvasPx;
+            float radius = (float) obj.radius * scaleBmpPxToCanvasPx;
 
             canvas.drawCircle(
                     x,
@@ -309,9 +419,10 @@ public class ObjectVisionProcessor implements VisionProcessor {
             canvas.drawText(
                     String.format(
                             java.util.Locale.US,
-                            "#%d %.0fmm",
+                            "#%d %.0fmm \"%s\"",
                             index + 1,
-                            ball.distanceMM
+                            obj.distanceMM,
+                            obj.objectType.name()
                     ),
                     x + radius,
                     y,
@@ -336,7 +447,8 @@ public class ObjectVisionProcessor implements VisionProcessor {
         lastDetection = Collections.emptyList();
 
         hsv.release();
-        mask.release();
+        mask1.release();
+        mask2.release();
         hierarchy.release();
         kernel_open.release();
         kernel_close.release();
