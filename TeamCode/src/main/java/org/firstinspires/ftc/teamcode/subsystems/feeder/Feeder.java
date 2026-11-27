@@ -21,11 +21,11 @@ public class Feeder {
         FeederMotorBottom = hardware.FeederMotorBottom;
 
         FeederMotorTop.setDirection(
-                DcMotorSimple.Direction.FORWARD
+                DcMotorSimple.Direction.REVERSE
         );
 
         FeederMotorBottom.setDirection(
-                DcMotorSimple.Direction.REVERSE
+                DcMotorSimple.Direction.FORWARD
         );
 
         FeederMotorTop.setZeroPowerBehavior(

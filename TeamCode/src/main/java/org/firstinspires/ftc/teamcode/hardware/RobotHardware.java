@@ -24,6 +24,8 @@ public class RobotHardware {
 
     public final Servo AngleAdjuster;
 
+    public final Servo SnapServo;
+
     public RobotHardware(
             HardwareMap hardwareMap,
             RobotConfig config
@@ -96,6 +98,14 @@ public class RobotHardware {
                 config.getString("robot.ANGLE_SHOOTER_ADJUSTER_NAME",
                         "asa")
         );
+
+        SnapServo = hardwareMap.get(
+                Servo.class,
+                config.getString("robot.ANGLE_SHOOTER_ADJUSTER_NAME",
+                        "snap")
+        );
+
+
 
 
 
