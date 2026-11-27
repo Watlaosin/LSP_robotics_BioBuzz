@@ -22,10 +22,10 @@ public class SnapServo {
     private final double SNAP_DELAY_SECONDS = 0.4;
     private boolean isSnapLooping = false;
     private boolean lastLeftBumper = false;
-    private final Servo angleAdjuster;
+    private final Servo snapServo;
 
     public SnapServo(RobotHardware hardware) {
-        angleAdjuster = hardware.AngleAdjuster;
+        snapServo = hardware.SnapServo;
     }
 
     public void setPosition(double degree) {
@@ -38,15 +38,15 @@ public class SnapServo {
         // Map that fraction to the calibrated servo range
         double position = MIN_POS + fraction * (MAX_POS - MIN_POS);
 
-        angleAdjuster.setPosition(position);
+        snapServo.setPosition(position);
     }
 
     public double getposition() {
-        return angleAdjuster.getPosition();
+        return snapServo.getPosition();
     }
 
     public void setRawPosition(double position) {
-        angleAdjuster.setPosition(Range.clip(position, 0.0, 1.0));
+        snapServo.setPosition(Range.clip(position, 0.0, 1.0));
     }
     public void loopSnapServo() {
         if (snapTimer.seconds() >= SNAP_DELAY_SECONDS) {

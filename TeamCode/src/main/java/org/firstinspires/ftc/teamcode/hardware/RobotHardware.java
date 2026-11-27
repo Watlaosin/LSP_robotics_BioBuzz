@@ -101,7 +101,7 @@ public class RobotHardware {
 
         SnapServo = hardwareMap.get(
                 Servo.class,
-                config.getString("robot.ANGLE_SHOOTER_ADJUSTER_NAME",
+                config.getString("robot.SNAP_SERVO_INTAKE_NAME",
                         "snap")
         );
 
